@@ -148,8 +148,6 @@ void Client::run() {
                 string user_name = string((char*)payload);
                 connect(user_name);
 
-                /*auto reply_header = Header{{message_type: CONNACK, message_id: header.message_id},
-                                           length: sizeof(Header)};*/
                 auto reply_header = Header {};
                 reply_header.message_type = CONNACK;
                 reply_header.message_id = header.message_id;
@@ -161,8 +159,7 @@ void Client::run() {
         case LIST:
             {
                 auto lst = list();
-                /*auto reply_header = Header{{message_type: LISTREPLY, message_id: header.message_id},
-                                           length: uint8_t(sizeof(Header) + 2*lst.size())};*/
+                
                 auto reply_header = Header {};
                 reply_header.message_type = LISTREPLY;
                 reply_header.message_id = header.message_id;
@@ -184,8 +181,7 @@ void Client::run() {
                 try {
                     name = info(id).name;
                 } catch (exception) {}
-                /*auto reply_header = Header{{message_type: INFOREPLY, message_id: header.message_id},
-                                           length: uint8_t(sizeof(Header) + name.length())};*/
+                
                 auto reply_header = Header {};
                 reply_header.message_type = INFOREPLY;
                 reply_header.message_id = header.message_id;
@@ -209,8 +205,7 @@ void Client::run() {
                 } catch (exception) {
                     state_buff = (uint8_t*)"\x00";
                 }
-                /*auto reply_header = Header{{message_type: SENDREPLY, message_id: header.message_id},
-                                           length: sizeof(Header) + 1};*/
+                
                 auto reply_header = Header {};
                 reply_header.message_type = SENDREPLY;
                 reply_header.message_id = header.message_id;
@@ -227,8 +222,7 @@ void Client::run() {
                 auto pr = receive();
                 auto usr_id = (pr.first);
                 auto message = pr.second;
-                /*auto reply_header = Header{{message_type: RECEIVEREPLY, message_id: header.message_id},
-                                            length: uint8_t(sizeof(Header) + sizeof(usr_id) + message.length())};*/
+                
                 auto reply_header = Header {};
                 reply_header.message_type = RECEIVEREPLY;
                 reply_header.message_id = header.message_id;
@@ -247,10 +241,9 @@ void Client::read(uint8_t* buffer, size_t len) {
     auto n = 0;
     while (n < len) {
         auto ret = ::read(fd, buffer + n, len - n);
-        if (ret < 0){
+        if (ret < 0)
             throw runtime_error("failed to read");
             
-        }
         if (ret == 0)
             throw runtime_error("socket closed");
 

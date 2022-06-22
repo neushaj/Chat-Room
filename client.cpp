@@ -73,10 +73,7 @@ void client::send_info_msg(uint16_t id){
     write(fd_server, (uint8_t*)&sent_header, sizeof(sent_header));
     write(fd_server, (uint8_t*)&id, sizeof(id));
     read(fd_server, (uint8_t*)&read_msg, sizeof(read_msg));
-    
-   /* if(read_msg.message_type != INFOREPLY || read_msg.message_id != message_id)
-        throw runtime_error("Server is not answering!!\n");  */
-    
+     
     int length_of_name = read_msg.length - sizeof(read_msg);
     uint8_t read_name[length_of_name+1];
     read(fd_server, read_name, length_of_name);
@@ -111,8 +108,7 @@ void client::send_text_msg(string msg, string name){
     uint8_t status;
     read(fd_server, &status, sizeof(status));
     status = (status);
-    /*if(read_msg.message_type != SENDREPLY || read_msg.message_id != message_id)
-        throw runtime_error("Server is not answering!!\n"); */
+    
     if(unsigned(status) == 0)
         cout << "   -sending failed! try again!" << endl; 
 }
@@ -136,8 +132,7 @@ int client::recieve_text_msg(){
     sent_header.length = sizeof(Header);
     write(fd_server, (uint8_t*)&sent_header, sizeof(sent_header));
     read(fd_server, (uint8_t*)&read_msg, sizeof(read_msg));
-    /*if(read_msg.message_type != RECEIVEREPLY || read_msg.message_id != message_id)
-        throw runtime_error("Server is not answering!!\n"); */
+    
     uint32_t sender_id;
     read(fd_server, (uint8_t*)&sender_id, sizeof(sender_id));
     int length_of_msg = read_msg.length - sizeof(read_msg) - sizeof(sender_id);
